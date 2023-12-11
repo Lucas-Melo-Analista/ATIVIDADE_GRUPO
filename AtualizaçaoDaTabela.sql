@@ -1,5 +1,7 @@
-USE smningatreinamentogrupo4
-
+CREATE DATABASE Tela_Cadastro2
+GO
+USE Tela_Cadastro2
+GO
 CREATE TABLE EMPRESA(
 ID_EMPRESA INT PRIMARY KEY IDENTITY NOT NULL,
 Nome_Empresa VARCHAR(150) NOT NULL
@@ -45,3 +47,74 @@ Numero_Colaborador BIGINT NOT NULL,
 Whatsapp BIT NOT NULL
 )
 
+INSERT INTO EMPRESA (Nome_Empresa) VALUES 
+('SMN INGÁ'),
+('SMN JOÃO PESSOA'),
+('SMN FRANCA'),
+('SMN PASSOS');
+
+
+INSERT INTO CARGO (ID_EMPRESA, Nome_cargo) VALUES 
+(1, 'Analista de Negócio'),
+(1, 'Desenvolvedor'),
+(2, 'Analista de Negócio'),
+(2, 'Desenvolvedor'),
+(3, 'Analista de Negócio'),
+(3, 'Desenvolvedor'),
+(4, 'Analista de Negócio'),
+(4, 'Desenvolvedor');
+
+INSERT INTO UF (Sigla) VALUES 
+('PB'),
+('SP'),
+('RJ'),
+('SC');
+
+INSERT INTO CIDADE (ID_UF, Nome_Cidade) VALUES 
+(1, 'INGÁ'),
+(3, 'RIO DE JANEIRO'),
+(1, 'JOÃO PESSOA'),
+(2, 'FRANCA'),
+(4, 'CHAPECÓ');
+
+GO
+ALTER PROC Inserir_Dados (@IdCargo INT, @IdCidade INT, @NomeColaborador VARCHAR(150), @EmailColaborador VARCHAR(100),
+@IdColaborador INT, @DDDColaborador TINYINT, @NumeroColaborador BIGINT, @Whatasapp BIT)
+AS
+BEGIN
+
+	INSERT INTO COLABORADOR (ID_CARGO, ID_CIDADE, Nome_colaborador, Email) VALUES (@IdCargo, @IdCidade, @NomeColaborador, @EmailColaborador)
+
+	DECLARE @UltimoIdColaborador INT
+	SELECT TOP 1 @UltimoIdColaborador = ID_COLABORADOR FROM COLABORADOR
+
+	INSERT INTO CONTATO (ID_COLABORADOR, DDD, Numero_Colaborador, Whatsapp) VALUES (@IdColaborador, @DDDColaborador, @NumeroColaborador, @Whatasapp)
+END
+GO
+
+EXEC Inserir_Dados 
+@IdCargo
+@IdCidade
+@NomeColaborador 
+@EmailColaborador 
+@IdColaborador 
+@DDDColaborador 
+@NumeroColaborador 
+@Whatasapp
+GO
+
+CREATE PROCEDURE Deletar_Dados (
+@IDColaborador INT)
+AS
+BEGIN
+  DELETE SELECT Nome_Empresa, Sigla, Nome_colaborador, Email, ID_CONTATO, DDD, Numero_Colaborador, Whatsapp
+  FROM EMPRESA, UF, CARGO, CIDADE, COLABORADOR, CONTATO
+  WHERE ID_COLABORADOR = @IDColaborador
+END
+
+
+CREATE TRIGGER Inserindo_Dados
+ON 
+INSTEAD OF 
+AS
+INSERT INTO 
