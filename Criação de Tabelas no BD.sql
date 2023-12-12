@@ -43,3 +43,36 @@ Numero_Colaborador BIGINT NOT NULL,
 Whatsapp BIT NOT NULL
 )
 
+
+CREATE PROCEDURE SP_SelectColaborador(
+	@ID_COLABORADOR INT = NULL,
+	@ID_CARGO INT = NULL,
+	@ID_CIDADE INT = NULL,
+	@Nome_colaborador VARCHAR(200) = NULL,
+	@Email VARCHAR(100) = NULL
+)
+
+AS
+	/*
+	Documentação
+	Arquivo Fonte......: Projeto.sql
+	Objetivo...........: Selecionando dados do colaborador
+	Autor..............: SMN - Juan
+	Data...............: 11/12/2023
+	Ex.................: EXEC [dbo].[SP_SelectColaborador]
+	*/
+
+	--Selecionando dados 
+
+	BEGIN
+		SELECT C.ID_COLABORADOR, C.ID_CARGO, CDD.ID_CIDADE, C.Nome_colaborador, C.Email 
+		from COLABORADOR
+		inner join CARGO CG
+		ON C.ID_COLABORADOR = CG.ID_CARGO
+		INNER JOIN CIDADE
+		ON C.ID_COLABORADOR = CDD.ID_CIDADE
+		WHERE (ID_COLABORADOR = @ID_COLABORADOR OR @ID_COLABORADOR IS NULL) AND
+		(ID_CARGO = @ID_CARGO OR @ID_CARGO IS NULL) AND
+		(ID_CIDADE = @ID_CIDADE OR @ID_CIDADE IS NULL) AND
+		(Nome_colaborador = @Nome_colaborador OR @Nome_colaborador IS NULL) AND 
+		(Email = @Email OR @Email IS NULL)
